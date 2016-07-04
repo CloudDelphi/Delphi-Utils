@@ -3,11 +3,9 @@ program Pattern_Singleton;
 uses
   Forms,
   uSingletonMainTest in 'uSingletonMainTest.pas' {Form3},
-  Patterns.Singleton in '..\..\Patterns.Singleton.pas',
   SingletonTest.Sucursal in 'SingletonTest.Sucursal.pas',
   SingletonTest.Persona in 'SingletonTest.Persona.pas',
-  Patterns.Singleton.Repository in '..\..\Patterns.Singleton.Repository.pas',
-  Patterns.Singleton.DefaultRepository in '..\..\Patterns.Singleton.DefaultRepository.pas';
+  Patterns.Singleton.SpringRepository in '..\..\Patterns.Singleton.SpringRepository.pas';
 
 {$R *.res}
 

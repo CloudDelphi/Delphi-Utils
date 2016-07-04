@@ -50,9 +50,16 @@ implementation
 
 {$R *.dfm}
 
+uses
+  Patterns.Singleton.Repository,
+  Patterns.Singleton.SpringRepository;
+
 procedure TForm3.FormCreate(Sender: TObject);
 begin
   ReportMemoryLeaksOnShutdown := True;
+
+  // override singletons repository
+//  TSingletonRepository.Initialize(TSpringSingletonRepository.Create);
 end;
 
 procedure TForm3.btnMostrarPersonaClick(Sender: TObject);

@@ -60,7 +60,7 @@ end;
 function SingletonRepository: ISingletonRepository;
 begin
   if not Assigned(__Respository) then
-    __Respository := TNativeSingletonRepository.Create;
+    TSingletonRepository.Initialize(TNativeSingletonRepository.Create);
 
   Result := __Respository;
 end;
