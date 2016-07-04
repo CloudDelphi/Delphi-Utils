@@ -41,9 +41,11 @@
 			<DCCReference Include="uSingletonMainTest.pas">
 				<Form>Form3</Form>
 			</DCCReference>
-			<DCCReference Include="E:\Delphi\Extensions\Design Patterns\Patterns.Singleton.pas"/>
+			<DCCReference Include="..\..\Patterns.Singleton.pas"/>
 			<DCCReference Include="SingletonTest.Sucursal.pas"/>
 			<DCCReference Include="SingletonTest.Persona.pas"/>
+			<DCCReference Include="..\..\Patterns.Singleton.Repository.pas"/>
+			<DCCReference Include="..\..\Patterns.Singleton.DefaultRepository.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>

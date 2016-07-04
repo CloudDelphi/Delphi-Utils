@@ -3,38 +3,25 @@ unit Patterns.Singleton;
 interface
 
 uses
-  Generics.Collections;
+  Patterns.Singleton.Repository;
 
 type
   TSingleton<T: class, constructor> = class abstract
   strict private
-    /// <summary> A Dictionary storing all the created Singletons </summary>
-    class var FInstances: TObjectDictionary<TClass, T>;
-
-    class function GetMetaClass: TClass;
-
-    class constructor Create;
-    class destructor Destroy;
+    /// <summary> Returns the TClass from the actual T type </summary>
+    class function GetMetaClass: TClass; static;
+  strict protected
+    /// <summary> Method called when the Singleton needs to be created </summary>
+    class function CreateInstance: T; virtual;
   public
-    ///<summary> Returns the Singleton instance; will create if necessary </summary>
-    class function Instance: T;
+    /// <summary> Returns the Singleton instance; will create if necessary </summary>
+    class function Instance: T; static;
   end;
 
 implementation
 
 uses
-  Rtti,
-  Generics.Defaults;
-
-class constructor TSingleton<T>.Create;
-begin
-  FInstances := TObjectDictionary<TClass, T>.Create([doOwnsValues]);
-end;
-
-class destructor TSingleton<T>.Destroy;
-begin
-  FInstances.Free;
-end;
+  Rtti;
 
 class function TSingleton<T>.GetMetaClass: TClass;
 var
@@ -43,16 +30,24 @@ begin
   Result := (Ctx.GetType(TypeInfo(T)) as TRttiInstanceType).MetaclassType;
 end;
 
+class function TSingleton<T>.CreateInstance: T;
+begin
+  Result := T.Create;
+end;
+
 class function TSingleton<T>.Instance: T;
 var
   MetaClass: TClass;
 begin
   MetaClass := GetMetaClass;
-  if not FInstances.TryGetValue(MetaClass, Result) then  
+
+  if not SingletonRepository.ContainsSingleton(MetaClass) then
   begin
-    Result := T.Create;
-    FInstances.Add(MetaClass, Result);
-  end;
+    Result := CreateInstance;
+    SingletonRepository.AddSingleton(Result);
+  end
+  else
+    Result := T(SingletonRepository.GetSingleton(MetaClass));
 end;
 
 end.
