@@ -2,8 +2,8 @@ object Form3: TForm3
   Left = 0
   Top = 0
   Caption = 'Form3'
-  ClientHeight = 216
-  ClientWidth = 470
+  ClientHeight = 131
+  ClientWidth = 653
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -36,8 +36,8 @@ object Form3: TForm3
     TabOrder = 1
   end
   object btnMostrarSucursal: TButton
-    Left = 16
-    Top = 157
+    Left = 236
+    Top = 73
     Width = 121
     Height = 41
     Caption = 'Mostrar Sucursal'
@@ -45,8 +45,8 @@ object Form3: TForm3
     OnClick = btnMostrarSucursalClick
   end
   object btnMostrarPersona: TButton
-    Left = 152
-    Top = 157
+    Left = 374
+    Top = 73
     Width = 121
     Height = 41
     Caption = 'Mostrar Persona'
@@ -63,12 +63,30 @@ object Form3: TForm3
     OnClick = btnCambiarSucursalClick
   end
   object btnCambiarPersona: TButton
-    Left = 236
-    Top = 75
+    Left = 374
+    Top = 20
     Width = 121
     Height = 35
     Caption = 'Modificar Persona'
     TabOrder = 5
     OnClick = btnCambiarPersonaClick
+  end
+  object btnCambiarTrabajador: TButton
+    Left = 504
+    Top = 20
+    Width = 137
+    Height = 35
+    Caption = 'Modificar Trabajador'
+    TabOrder = 6
+    OnClick = btnCambiarTrabajadorClick
+  end
+  object btnMostrarTrabajador: TButton
+    Left = 504
+    Top = 73
+    Width = 137
+    Height = 41
+    Caption = 'Mostrar Trabajador'
+    TabOrder = 7
+    OnClick = btnMostrarTrabajadorClick
   end
 end

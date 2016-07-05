@@ -5,7 +5,8 @@ uses
   uSingletonMainTest in 'uSingletonMainTest.pas' {Form3},
   SingletonTest.Sucursal in 'SingletonTest.Sucursal.pas',
   SingletonTest.Persona in 'SingletonTest.Persona.pas',
-  Patterns.Singleton.SpringRepository in '..\..\Patterns.Singleton.SpringRepository.pas';
+  Patterns.Singleton.SpringRepository in '..\..\Patterns.Singleton.SpringRepository.pas',
+  SingletonTest.Trabajador in 'SingletonTest.Trabajador.pas';
 
 {$R *.res}
 
