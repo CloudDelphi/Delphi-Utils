@@ -1,0 +1,27 @@
+object AuthenticationFMXForm: TAuthenticationFMXForm
+  Left = 0
+  Top = 0
+  BorderStyle = SizeToolWin
+  Caption = 'OAuth Login'
+  ClientHeight = 600
+  ClientWidth = 900
+  Position = ScreenCenter
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnClose = FormClose
+  DesignerMasterStyle = 0
+  object WebBrowser: TWebBrowser
+    Align = Client
+    Size.Width = 900.000000000000000000
+    Size.Height = 600.000000000000000000
+    Size.PlatformDefault = False
+    OnDidFinishLoad = WebBrowserDidFinishLoad
+  end
+  object AniIndicator: TAniIndicator
+    Align = Center
+    Size.Width = 776.000000000000000000
+    Size.Height = 86.000000000000000000
+    Size.PlatformDefault = False
+  end
+end

@@ -1,0 +1,98 @@
+object MainForm: TMainForm
+  Left = 0
+  Top = 0
+  Caption = 'Mercado Libre REST API Demo'
+  ClientHeight = 174
+  ClientWidth = 514
+  Position = ScreenCenter
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 0
+  object btnGetToken: TButton
+    StyledSettings = [Family, FontColor]
+    Position.X = 408.000000000000000000
+    Position.Y = 76.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 32.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    Text = 'Get Token'
+    TextSettings.Font.Size = 14.000000000000000000
+    TextSettings.Font.Style = [fsBold]
+    OnClick = btnGetTokenClick
+  end
+  object edApplicationID: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 0
+    TextSettings.Font.Size = 14.000000000000000000
+    Position.X = 15.000000000000000000
+    Position.Y = 30.000000000000000000
+    Size.Width = 369.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    StyledSettings = [Family, Style, FontColor]
+    object Label1: TLabel
+      Align = MostTop
+      StyledSettings = [Family, FontColor]
+      Margins.Top = -20.000000000000000000
+      Position.Y = -20.000000000000000000
+      Size.Width = 369.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 14.000000000000000000
+      TextSettings.Font.Style = [fsBold]
+      Text = 'Application ID'
+    end
+  end
+  object edCallbackUrl: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 1
+    TextSettings.Font.Size = 14.000000000000000000
+    Position.X = 15.000000000000000000
+    Position.Y = 84.000000000000000000
+    Size.Width = 369.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    TextPrompt = 'Optional, must implement https protocol'
+    StyledSettings = [Family, Style, FontColor]
+    object Label2: TLabel
+      Align = MostTop
+      StyledSettings = [Family, FontColor]
+      Margins.Top = -20.000000000000000000
+      Position.Y = -20.000000000000000000
+      Size.Width = 369.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 14.000000000000000000
+      TextSettings.Font.Style = [fsBold]
+      Text = 'Callback URL'
+    end
+  end
+  object edToken: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 3
+    ReadOnly = True
+    TextSettings.Font.Size = 14.000000000000000000
+    Position.X = 15.000000000000000000
+    Position.Y = 138.000000000000000000
+    Size.Width = 369.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    TextPrompt = 'Returned token will be displayed here'
+    StyledSettings = [Family, Style, FontColor]
+    object Label3: TLabel
+      Align = MostTop
+      StyledSettings = [Family, FontColor]
+      Margins.Top = -20.000000000000000000
+      Position.Y = -20.000000000000000000
+      Size.Width = 369.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 14.000000000000000000
+      TextSettings.Font.Style = [fsBold]
+      Text = 'Token'
+    end
+  end
+end
