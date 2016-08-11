@@ -79,6 +79,7 @@ end;
 
 function TWinWebBrowserEmulation.OpenWebBrowserEmulationRegistry(out ARegistry: TRegistry): Boolean;
 begin
+  Result := False;
   ARegistry := TRegistry.Create;
   try
     ARegistry.RootKey := HKEY_CURRENT_USER;
@@ -134,6 +135,8 @@ begin
     TInternetExplorerVersion.IE9: Result := 9000;
     TInternetExplorerVersion.IE8: Result := 8000;
     TInternetExplorerVersion.IE7: Result := 7000;
+  else
+    raise Exception.Create('TInternetExplorerVersionHelper.Value: Unknown value');
   end;
 end;
 
