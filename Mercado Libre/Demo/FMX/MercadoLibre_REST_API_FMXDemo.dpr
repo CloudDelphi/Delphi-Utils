@@ -1,4 +1,4 @@
-program MercadoLibre_REST_API_Demo;
+program MercadoLibre_REST_API_FMXDemo;
 
 uses
   System.StartUpCopy,

@@ -3,7 +3,7 @@ unit MercadoLibre.Win.WebBrowser;
 interface
 
 uses
-  Win.WebBrowser;
+  Win.WebBrowser; // See https://github.com/ortuagustin/Delphi-Utils/blob/master/Win/Win.WebBrowser.pas
 
 type
 {$REGION 'TWinWebBrowserFix'}

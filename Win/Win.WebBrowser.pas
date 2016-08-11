@@ -2,6 +2,14 @@ unit Win.WebBrowser;
 
 interface
 
+(*
+
+  Special thanks to David Esperalta, aka Dec @ http://www.clubdelphi.com/foros/member.php?u=4681
+
+  http://www.clubdelphi.com/foros/showthread.php?p=507565
+
+*)
+
 uses
   System.Win.Registry;
 

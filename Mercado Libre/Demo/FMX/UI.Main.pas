@@ -36,6 +36,7 @@ implementation
 
 uses
   MercadoLibre.Services,
+  MercadoLibre.Win.WebBrowser, // add this unit to add IE11 Emulation Support for TWebBrowser
   MercadoLibre.FMX.OAuthUI;
 
 procedure TMainForm.FormCreate(Sender: TObject);
