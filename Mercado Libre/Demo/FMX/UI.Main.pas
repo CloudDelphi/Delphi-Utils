@@ -16,15 +16,18 @@ type
     btnGetToken: TButton;
     edApplicationID: TEdit;
     Label1: TLabel;
-    edCallbackUrl: TEdit;
+    edApplicationSecret: TEdit;
     Label2: TLabel;
     edToken: TEdit;
     Label3: TLabel;
+    edCallbackUrl: TEdit;
+    Label4: TLabel;
     procedure btnGetTokenClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     function ApplicationID: string;
     function CallbackURL: string;
+    function ApplicationSecret: string;
   end;
 
 var
@@ -35,6 +38,7 @@ implementation
 {$R *.fmx}
 
 uses
+  MercadoLibre.Token,
   MercadoLibre.Services,
   MercadoLibre.Win.WebBrowser, // add this unit to add IE11 Emulation Support for TWebBrowser
   MercadoLibre.FMX.OAuthUI;
@@ -44,6 +48,7 @@ begin
   ReportMemoryLeaksOnShutdown := True;
   edApplicationID.Text := '2010039294220063';
   edCallbackUrl.Text := 'https://www.google.com.ar/';
+  edApplicationSecret.Text := 'ouq0j1OJ5BbArRgQDSEqc9MSGxZISosr';
 end;
 
 function TMainForm.ApplicationID: string;
@@ -56,17 +61,22 @@ begin
   Result := edCallbackUrl.Text;
 end;
 
+function TMainForm.ApplicationSecret: string;
+begin
+  Result := edApplicationSecret.Text;
+end;
+
 procedure TMainForm.btnGetTokenClick(Sender: TObject);
 var
   OAuthUI: IMercadoLibreAuthenticator;
-  Token: TMercadoLibreToken;
+  Token: IMercadoLibreToken;
 begin
   edToken.Text := '';
   OAuthUI := TAuthenticationFMXForm.Create(Self);
-  Token := OAuthUI.AuthenticateModal(ApplicationID, CallbackUrl);
-  if Token <> '' then
+  Token := OAuthUI.AuthenticateModal(ApplicationID, ApplicationSecret, CallbackUrl);
+  if Token.AccessToken <> '' then
   begin
-    edToken.Text := Token;
+    edToken.Text := Token.AccessToken;
     edToken.SetFocus;
     edToken.SelectAll;
   end;

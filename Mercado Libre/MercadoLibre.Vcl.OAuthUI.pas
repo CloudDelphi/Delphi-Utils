@@ -20,14 +20,14 @@ type
     procedure WebBrowserNavigateComplete2(ASender: TObject; const pDisp: IDispatch; const [Ref] URL: OleVariant);
     procedure FormResize(Sender: TObject);
   strict private
-    FToken: TMercadoLibreToken;
+    FToken: IMercadoLibreToken;
     FAcquiredToken: Boolean;
     FCurrentUrl: string;
 
     function GetCurrentUrl: string;
-    function GetToken: TMercadoLibreToken;
+    function GetToken: IMercadoLibreToken;
     procedure SetCurrentUrl(const Value: string);
-    procedure SetToken(const Value: TMercadoLibreToken);
+    procedure SetToken(const Value: IMercadoLibreToken);
 
     procedure HideLoadingIndicator;
     procedure ShowLoadingIndicator;
@@ -37,16 +37,16 @@ type
     /// <summary> Returns True if the given URL contains a Token </summary>
     function ContainsToken(const Url: string): Boolean; virtual;
     /// <summary> Returns the Token from the gven URL; assumes ContainsToken is True </summary>
-    function ExtractToken(const Url: string): TMercadoLibreToken; virtual;
+    function ExtractToken(const Url: string): IMercadoLibreToken; virtual;
 
     /// <summary> Token acquired on succesful authentication </summary>
-    property Token: TMercadoLibreToken read GetToken write SetToken;
+    property Token: IMercadoLibreToken read GetToken write SetToken;
     /// <summary> Flag that controls if a Token has ben succesfuly acquired </summary>
     property AcquiredToken: Boolean read FAcquiredToken;
     /// <summary> The current URL used by the WebBrowser component </summary>
     property CurrentUrl: string read GetCurrentUrl write SetCurrentUrl;
 {$REGION 'IMercadoLibreAuthenticator'}
-    function AuthenticateModal(const ApplicationID, CallbackUrl: string): TMercadoLibreToken;
+    function AuthenticateModal(const ApplicationID, CallbackUrl: string): IMercadoLibreToken;
 {$ENDREGION}
   public
     constructor Create(AOwner: TComponent); override;
@@ -73,7 +73,7 @@ end;
 
 {$REGION 'IMercadoLibreAuthenticator'}
 
-function TAuthenticationVclForm.AuthenticateModal(const ApplicationID, CallbackUrl: string): TMercadoLibreToken;
+function TAuthenticationVclForm.AuthenticateModal(const ApplicationID, CallbackUrl: string): IMercadoLibreToken;
 begin
   ShowLoadingIndicator;
   CurrentUrl := GetAuthUrl(ApplicationID, CallbackURL);
@@ -102,7 +102,7 @@ begin
   Result := Url.Contains('?code=');
 end;
 
-function TAuthenticationVclForm.ExtractToken(const Url: string): TMercadoLibreToken;
+function TAuthenticationVclForm.ExtractToken(const Url: string): IMercadoLibreToken;
 begin
   Result := Copy(Url, Url.IndexOf('?code=') + 1, Integer.MaxValue).Replace('?code=', '');
 end;
@@ -123,7 +123,7 @@ end;
 
 {$REGION 'Properties'}
 
-function TAuthenticationVclForm.GetToken: TMercadoLibreToken;
+function TAuthenticationVclForm.GetToken: IMercadoLibreToken;
 begin
   if AcquiredToken then
     Result := FToken
@@ -137,7 +137,7 @@ begin
   WebBrowser.Navigate2(FCurrentUrl);
 end;
 
-procedure TAuthenticationVclForm.SetToken(const Value: TMercadoLibreToken);
+procedure TAuthenticationVclForm.SetToken(const Value: IMercadoLibreToken);
 begin
   FToken := Trim(Value);
   FAcquiredToken := FToken <> EmptyStr;

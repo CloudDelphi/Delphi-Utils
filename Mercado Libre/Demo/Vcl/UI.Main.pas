@@ -42,7 +42,7 @@ end;
 procedure TMainForm.btnGetTokenClick(Sender: TObject);
 var
   OAuthUI: IMercadoLibreAuthenticator;
-  Token: TMercadoLibreToken;
+  Token: IMercadoLibreToken;
 begin
   edToken.Text := '';
   OAuthUI := TAuthenticationVclForm.Create(Self);
