@@ -3,6 +3,7 @@ unit MercadoLibre.Services;
 interface
 
 uses
+  MercadoLibre.Token,
   MercadoLibre.Exceptions;
 
 type
@@ -12,9 +13,6 @@ type
     ['{DB1C8225-F72B-4E36-A633-3516E032DBE2}']
   end;
 {$ENDREGION}
-
-  /// <summary> Token returned on succesful Authentication </summary>
-  TMercadoLibreToken = type string;
 
 {$REGION 'IMercadoLibreAuthenticator'}
   /// <summary> Implements a MercadoLibre OAuth flow </summary>
@@ -28,7 +26,7 @@ type
     ///  - ApplicationID: The ID generated for your Application by Mercado Libre
     ///  - CallbackURL: The callback URL configured for your Application or one of the allowed domains
     /// </summary>
-    function AuthenticateModal(const ApplicationID, CallbackUrl: string): TMercadoLibreToken;
+    function AuthenticateModal(const ApplicationID, ApplicationSecret, CallbackUrl: string): IMercadoLibreToken;
   end;
 {$ENDREGION}
 
