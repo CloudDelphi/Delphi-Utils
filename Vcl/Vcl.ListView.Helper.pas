@@ -24,6 +24,19 @@ type
     ///  No tiene efecto si TListView.Checkboxes = False
     /// </summary>
     function CheckedCount: Integer;
+
+    /// <summary> Necesario invocar para poder usar la propiedad TListColumnHelper.Visible </summary>
+    procedure InitializeColumnsVisibility;
+  end;
+{$ENDREGION}
+
+{$REGION 'TListColumnHelper'}
+  TListColumnHelper = class helper for TListColumn
+  strict private
+    function GetVisible: Boolean;
+    procedure SetVisible(const Value: Boolean);
+  public
+    property Visible: Boolean read GetVisible write SetVisible;
   end;
 {$ENDREGION}
 
@@ -73,6 +86,35 @@ begin
     if ListItem.Checked then
       Inc(Result);
   end;
+end;
+
+procedure TListViewHelper.InitializeColumnsVisibility;
+var
+  I: Integer;
+begin
+  // me guardo el ancho de la columna en el Tag, para despues usarlo en el class helper en el metodo Visible
+  for I := 0 to Columns.Count - 1 do
+    Column[I].Tag := Column[I].Width;
+end;
+
+{$ENDREGION}
+
+{$REGION 'TListColumnHelper'}
+
+function TListColumnHelper.GetVisible: Boolean;
+begin
+  Result := Self.Width = 0;
+end;
+
+procedure TListColumnHelper.SetVisible(const Value: Boolean);
+begin
+  if not Value then
+  begin
+    Self.Tag := Self.Width;
+    Self.Width := 0;
+  end
+  else
+    Self.Width := Tag;
 end;
 
 {$ENDREGION}
