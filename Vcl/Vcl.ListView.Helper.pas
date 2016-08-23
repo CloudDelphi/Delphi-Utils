@@ -24,9 +24,10 @@ type
     ///  No tiene efecto si TListView.Checkboxes = False
     /// </summary>
     function CheckedCount: Integer;
-
     /// <summary> Necesario invocar para poder usar la propiedad TListColumnHelper.Visible </summary>
     procedure InitializeColumnsVisibility;
+    /// <summary> Ajusta el tamaño de las columnas del ListView de modo tal que StrechColum ocupe lo mas posible </summary>
+    procedure StretchColumIndex(const StectchColumn: Integer);
   end;
 {$ENDREGION}
 
@@ -86,6 +87,23 @@ begin
     if ListItem.Checked then
       Inc(Result);
   end;
+end;
+
+procedure TListViewHelper.StretchColumIndex(const StectchColumn: Integer);
+var
+  AWidth, I: Integer;
+begin
+  if not Assigned(Parent) then
+    Exit;
+
+  AWidth := 0;
+  for I := 0 to Columns.Count - 1 do
+  begin
+    if I <> StectchColumn then
+      AWidth := AWidth + Column[I].Width;
+  end;
+
+  Column[StectchColumn].Width := Abs(Parent.Width - AWidth - Trunc(AWidth * 0.15));
 end;
 
 procedure TListViewHelper.InitializeColumnsVisibility;
