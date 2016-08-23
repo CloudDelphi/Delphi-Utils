@@ -103,7 +103,7 @@ begin
       AWidth := AWidth + Column[I].Width;
   end;
 
-  Column[StectchColumn].Width := Abs(Parent.Width - AWidth - Trunc(AWidth * 0.15));
+  Column[StectchColumn].Width := Abs(Parent.Width - AWidth - Trunc(Parent.Width * 0.05));
 end;
 
 procedure TListViewHelper.InitializeColumnsVisibility;
