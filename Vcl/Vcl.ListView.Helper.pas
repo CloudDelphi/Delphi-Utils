@@ -5,6 +5,9 @@ interface
 uses
   Vcl.ComCtrls;
 
+const
+  clListViewSelectedBackground = $00FFF3E5;
+
 type
 {$REGION 'TListViewHelper'}
   TListViewHelper = class helper for TListView
