@@ -3,6 +3,7 @@ unit FMX.Helpers.Forms;
 interface
 
 uses
+  FMX.Types,
   FMX.Forms,
   FMX.Controls,
   Winapi.Windows;
@@ -13,8 +14,10 @@ type
   strict private
     function GetWinHandle: HWND;
   public
-    /// <summary> Parents the FMX Form to the "InForm" FMX Form inside the Control </summary>
-    procedure ParentTo(AControl: FMX.Controls.TControl; InForm: FMX.Forms.TForm);
+    /// <summary> Parents the FMX Form to the FMX Object </summary>
+    procedure ParentTo(&Object: FMX.Types.TFmxObject);
+    /// <summary> Calls ParentTo and then uses Windows API to set the Window Parent to the InForm HWND </summary>
+    procedure WinParentTo(&Object: FMX.Types.TFmxObject; InForm: FMX.Forms.TForm);
     /// <summary> Returns the Windows HWND value </summary>
     property WinHandle: HWND read GetWinHandle;
   end;
@@ -32,12 +35,15 @@ begin
   Result := WindowHandleToPlatform(Handle).Wnd;
 end;
 
-procedure TFMXFormHelper.ParentTo(AControl: FMX.Controls.TControl; InForm: FMX.Forms.TForm);
+procedure TFMXFormHelper.ParentTo(&Object: FMX.Types.TFmxObject);
 begin
   while ChildrenCount > 0 do
-    Children[0].Parent := AControl;
+    Children[0].Parent := &Object;
+end;
 
-//  Parent := InForm;
+procedure TFMXFormHelper.WinParentTo(&Object: FMX.Types.TFmxObject; InForm: FMX.Forms.TForm);
+begin
+  ParentTo(&Object);
   Winapi.Windows.SetParent(WinHandle, InForm.WinHandle);
 end;
 
