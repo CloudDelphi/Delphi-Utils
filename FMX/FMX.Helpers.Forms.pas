@@ -10,14 +10,14 @@ uses
 
 type
 {$REGION 'TFMXFormHelper'}
-  TFMXFormHelper = class helper for FMX.Forms.TForm
+  TFMXFormHelper = class helper for FMX.Forms.TCommonCustomForm
   strict private
     function GetWinHandle: HWND;
   public
     /// <summary> Parents the FMX Form to the FMX Object </summary>
     procedure ParentTo(&Object: FMX.Types.TFmxObject);
     /// <summary> Calls ParentTo and then uses Windows API to set the Window Parent to the InForm HWND </summary>
-    procedure WinParentTo(&Object: FMX.Types.TFmxObject; InForm: FMX.Forms.TForm);
+    procedure WinParentTo(&Object: FMX.Types.TFmxObject; InForm: FMX.Forms.TCommonCustomForm);
     /// <summary> Returns the Windows HWND value </summary>
     property WinHandle: HWND read GetWinHandle;
   end;
@@ -41,7 +41,7 @@ begin
     Children[0].Parent := &Object;
 end;
 
-procedure TFMXFormHelper.WinParentTo(&Object: FMX.Types.TFmxObject; InForm: FMX.Forms.TForm);
+procedure TFMXFormHelper.WinParentTo(&Object: FMX.Types.TFmxObject; InForm: FMX.Forms.TCommonCustomForm);
 begin
   ParentTo(&Object);
   Winapi.Windows.SetParent(WinHandle, InForm.WinHandle);
