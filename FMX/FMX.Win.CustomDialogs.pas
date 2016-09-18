@@ -10,59 +10,94 @@ interface
 uses
   FMX.Dialogs;
 
-procedure InfoMsg(const AMsg: string); overload;
-procedure InfoMsg(const AMsg: string; const Args: array of const); overload;
+{$REGION 'Information Messages'}
+/// <summary> Shows an Information Message </summary>
+procedure InfoMsg(const Msg: string); overload;
+/// <summary> Shows an Information Message </summary>
+procedure InfoMsg(const Msg: string; const FormatArgs: array of const); overload;
+{$ENDREGION}
 
-function PromptMsg(const APrompt: string): Boolean; overload;
-function PromptMsg(const APrompt: string; const AParams: array of const): Boolean; overload;
-function PromptConfirm: Boolean;
-function PromptDiscardAndExit: Boolean;
+{$REGION 'Confirmation Messages'}
+/// <summary> Displays a Confirmation Message with a prompt. Returns True if click on OK. False otherwise </summary>
+function PromptMsg(const Prompt: string): Boolean; overload;
+/// <summary> Displays a Confirmation Message with a prompt. Returns True if click on OK. False otherwise </summary>
+function PromptMsg(const Prompt: string; const FormatArgs: array of const): Boolean; overload;
+/// <summary> PromptMsg asking to discard changes. Returns True if click on OK. False otherwise </summary>
+function PromptDiscardAndExit: Boolean; overload;
+{$ENDREGION}
 
-function ErrorAndPromptMsg(const APrompt: string): Boolean;
-procedure ErrorMsg(const APrompt: string);
-procedure ErrorMsgFmt(const AMsg: string; const Args: array of const);
+{$REGION 'Error Messages'}
+/// <summary> Displays a Error Message. Returns True if click on OK. False otherwise </summary>
+function ErrorPromptMsg(const Prompt: string): Boolean; overload;
+/// <summary> Displays a Error Message. Returns True if click on OK. False otherwise </summary>
+function ErrorPromptMsg(const Prompt: string; const FormatArgs: array of const): Boolean; overload;
+/// <summary> Shows an Error Message </summary>
+procedure ErrorMsg(const Msg: string); overload;
+/// <summary> Shows an Error Message </summary>
+procedure ErrorMsg(const Msg: string; const FormatArgs: array of const); overload;
+/// <summary> Shows an Error Message and then calls System.Abort </summary>
+procedure ErrorAbortMsg(const Msg: string); overload;
+/// <summary> Shows an Error Message and then calls System.Abort </summary>
+procedure ErrorAbortMsg(const Msg: string; const FormatArgs: array of const); overload;
+{$ENDREGION}
 
-function WarningMsg(const APrompt: string; const ShowCancelButton: Boolean = False): Integer;
-function WarningMsgFmt(const APrompt: string; const Args: array of const;
-  const ShowCancelButton: Boolean = False): Integer;
+{$REGION 'Warning Messages'}
+/// <summary> Shows an Warning Message </summary>
+procedure WarningMsg(const Msg: string); overload;
+/// <summary> Shows an Warning Message </summary>
+procedure WarningMsg(const Msg: string; const FormatArgs: array of const); overload;
+/// <summary> Displays a Warning Message with a prompt. Returns True if click on OK. False otherwise </summary>
+function WarningPrompt(const Prompt: string): Boolean; overload;
+/// <summary> Displays a Warning Message with a prompt. Returns True if click on OK. False otherwise </summary>
+function WarningPrompt(const Prompt: string; const FormatArgs: array of const): Boolean; overload;
+{$ENDREGION}
 
-function WarningPrompt(const APrompt: string): Boolean;
-function WarningPromptFmt(const APrompt: string; const Args: array of const): Boolean;
+procedure PromptOpenFile(const Prompt, Filename: string);
 
 implementation
 
 uses
+{$IFDEF MSWINDOWS}
+  Winapi.ShellAPI,
+  Winapi.Windows,
+{$ENDIF}
   System.SysUtils,
   System.UITypes;
 
-procedure ErrorMsgFmt(const AMsg: string; const Args: array of const);
+procedure ErrorAbortMsg(const Msg: string);
 begin
-  ErrorMsg(Format(AMsg, Args));
+  ErrorMsg(Msg);
+  Abort;
 end;
 
-procedure InfoMsg(const AMsg: string);
+procedure ErrorAbortMsg(const Msg: string; const FormatArgs: array of const);
 begin
-  MessageDlg(AMsg, TMsgDlgType.mtInformation, [TMsgDlgBtn.mbOK], 0);
+  ErrorAbortMsg(Format(Msg, FormatArgs));
 end;
 
-procedure InfoMsg(const AMsg: string; const Args: array of const);
+procedure ErrorMsg(const Msg: string; const FormatArgs: array of const);
 begin
-  InfoMsg(Format(AMsg, Args));
+  ErrorMsg(Format(Msg, FormatArgs));
 end;
 
-function PromptMsg(const APrompt: string): Boolean;
+procedure InfoMsg(const Msg: string);
 begin
-  Result := MessageDlg(APrompt, TMsgDlgType.mtConfirmation, mbOKCancel, 0) = mrOk;
+  MessageDlg(Msg, TMsgDlgType.mtInformation, [TMsgDlgBtn.mbOK], 0, TMsgDlgBtn.mbOK);
 end;
 
-function PromptMsg(const APrompt: string; const AParams: array of const): Boolean;
+procedure InfoMsg(const Msg: string; const FormatArgs: array of const);
 begin
-  Result := PromptMsg(Format(APrompt, AParams));
+  InfoMsg(Format(Msg, FormatArgs));
 end;
 
-function PromptConfirm: Boolean;
+function PromptMsg(const Prompt: string): Boolean;
 begin
-  Result := PromptMsg('Confirmar?');
+  Result := MessageDlg(Prompt, TMsgDlgType.mtConfirmation , mbOKCancel, 0, TMsgDlgBtn.mbOK) = mrOk;
+end;
+
+function PromptMsg(const Prompt: string; const FormatArgs: array of const): Boolean;
+begin
+  Result := PromptMsg(Format(Prompt, FormatArgs));
 end;
 
 function PromptDiscardAndExit: Boolean;
@@ -70,38 +105,49 @@ begin
   Result := PromptMsg('Descartar cambios y salir?');
 end;
 
-function ErrorAndPromptMsg(const APrompt: string): Boolean;
+function ErrorPromptMsg(const Prompt: string): Boolean;
 begin
-  Result := MessageDlg(APrompt, TMsgDlgType.mtError, mbOKCancel, 0) = mrOk;
+  Result := MessageDlg(Prompt, TMsgDlgType.mtError, mbOKCancel, 0, TMsgDlgBtn.mbOK) = mrOk;
 end;
 
-procedure ErrorMsg(const APrompt: string);
+function ErrorPromptMsg(const Prompt: string; const FormatArgs: array of const): Boolean;
 begin
-  MessageDlg(APrompt, TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], 0);
+  Result := ErrorPromptMsg(Format(Prompt, FormatArgs));
 end;
 
-function WarningMsgFmt(const APrompt: string; const Args: array of const;
-  const ShowCancelButton: Boolean = False): Integer;
+procedure ErrorMsg(const Msg: string);
 begin
-  Result := WarningMsg(Format(APrompt, Args), ShowCancelButton);
+  MessageDlg(Msg, TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], 0, TMsgDlgBtn.mbOK);
 end;
 
-function WarningMsg(const APrompt: string; const ShowCancelButton: Boolean): Integer;
+procedure WarningMsg(const Msg: string);
 begin
-  if ShowCancelButton then
-    Result := MessageDlg(APrompt, TMsgDlgType.mtWarning, mbOKCancel, 0)
-  else
-    Result := MessageDlg(APrompt, TMsgDlgType.mtWarning, [TMsgDlgBtn.mbOK], 0)
+  MessageDlg(Msg, TMsgDlgType.mtWarning, [TMsgDlgBtn.mbOK], 0, TMsgDlgBtn.mbOK);
 end;
 
-function WarningPrompt(const APrompt: string): Boolean;
+procedure WarningMsg(const Msg: string; const FormatArgs: array of const);
 begin
-  Result := WarningMsg(APrompt, True) = mrOk;
+  WarningMsg(Msg, FormatArgs);
 end;
 
-function WarningPromptFmt(const APrompt: string; const Args: array of const): Boolean;
+function WarningPrompt(const Prompt: string): Boolean;
 begin
-  Result := WarningPrompt(Format(APrompt, Args));
+  Result :=  MessageDlg(Prompt, TMsgDlgType.mtWarning, mbOKCancel, 0, TMsgDlgBtn.mbOK) = mrOk;
 end;
+
+function WarningPrompt(const Prompt: string; const FormatArgs: array of const): Boolean;
+begin
+  Result := WarningPrompt(Format(Prompt, FormatArgs));
+end;
+
+{$IFDEF MSWINDOWS}
+
+procedure PromptOpenFile(const Prompt, Filename: string);
+begin
+  if PromptMsg(Prompt + sLineBreak + sLineBreak + 'Abrir archivo?') then
+    ShellExecute(0, 'OPEN', PWideChar(Filename), nil, nil, SW_SHOWMAXIMIZED);
+end;
+
+{$ENDIF}
 
 end.
