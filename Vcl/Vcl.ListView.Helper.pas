@@ -11,6 +11,9 @@ const
 type
 {$REGION 'TListViewHelper'}
   TListViewHelper = class helper for TListView
+  private
+    function GetItemsInGroup(Group: TListGroup): Integer;
+    function GetItemCount: Integer;
   public
     /// <summary>
     ///   Marca (tilda los checkbox) de todos los items del ListView
@@ -31,6 +34,10 @@ type
     procedure InitializeColumnsVisibility;
     /// <summary> Ajusta el tamaño de las columnas del ListView de modo tal que StrechColum ocupe lo mas posible </summary>
     procedure StretchColumIndex(const StectchColumn: Integer);
+    /// <summary> Devuelve la cantidad total de Items </summary>
+    property ItemCount: Integer read GetItemCount;
+    /// <summary> Devuelve la cantidad de Items en el grupo correspondiente </summary>
+    property ItemsInGroup[Index: TListGroup]: Integer read GetItemsInGroup;
   end;
 {$ENDREGION}
 
@@ -44,7 +51,26 @@ type
   end;
 {$ENDREGION}
 
+{$REGION 'TListItemHelper'}
+  TListItemHelper = class helper for TListItem
+  private
+    function Groups: TListGroups;
+    function ListView: TListView;
+    function GetRelativeIndex: Integer;
+  public
+    /// <summary>
+    ///   El indice del ListItem relativo a su grupo
+    ///  Si el ListItem no tiene Grupo, se devuelve TListItem.Index
+    ///  Si el ListView no tiene GroupView := True, se devuelve TListItem.Index
+    /// </summary>
+    property RelativeIndex: Integer read GetRelativeIndex;
+  end;
+{$ENDREGION}
+
 implementation
+
+uses
+  System.SysUtils;
 
 {$REGION 'TListViewHelper'}
 
@@ -88,6 +114,23 @@ begin
   for ListItem in Items do
   begin
     if ListItem.Checked then
+      Inc(Result);
+  end;
+end;
+
+function TListViewHelper.GetItemCount: Integer;
+begin
+  Result := Items.Count;
+end;
+
+function TListViewHelper.GetItemsInGroup(Group: TListGroup): Integer;
+var
+  ListItem: TListItem;
+begin
+  Result := 0;
+  for ListItem in Items do
+  begin
+    if ListItem.GroupID = Group.GroupID then
       Inc(Result);
   end;
 end;
@@ -136,6 +179,41 @@ begin
   end
   else
     Self.Width := Tag;
+end;
+
+{$ENDREGION}
+
+{$REGION 'TListItemHelper'}
+
+function TListItemHelper.Groups: TListGroups;
+begin
+  Result := ListView.Groups;
+end;
+
+function TListItemHelper.ListView: TListView;
+begin
+  Result := TListView(inherited ListView);
+end;
+
+function TListItemHelper.GetRelativeIndex: Integer;
+var
+  I, PriorGroupCount, ThisGroupCount: Integer;
+begin
+  if GroupID = -1 then
+    Exit(Index);
+
+  if not ListView.GroupView then
+    Exit(Index);
+
+  PriorGroupCount := ListView.ItemsInGroup[Groups[GroupID - 1]];
+  ThisGroupCount := ListView.ItemsInGroup[Groups[GroupID]];
+  for I := PriorGroupCount to ThisGroupCount do
+  begin
+    if ListView.Items[I] = Self then
+      Exit(I);
+  end;
+
+  raise Exception.CreateFmt('Item with Index %d not found on GroupID %d', [Index, GroupID]);
 end;
 
 {$ENDREGION}
