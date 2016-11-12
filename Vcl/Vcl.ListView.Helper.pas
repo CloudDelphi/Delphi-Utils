@@ -34,6 +34,16 @@ type
     procedure InitializeColumnsVisibility;
     /// <summary> Ajusta el tamaño de las columnas del ListView de modo tal que StrechColum ocupe lo mas posible </summary>
     procedure StretchColumIndex(const StectchColumn: Integer);
+    /// <summary> Crea un nuevo Grupo en el ListView </summary>
+    /// <param name="ID"> El valor que se asigna a la propiedad GroupID </param>
+    /// <param name="Header"> El valor que se asigna a la propiedad Header </param>
+    /// <remarks> En la propiedad State del Grupo se asigna "[lgsNormal, lgsCollapsible]" </remarks>
+    function CreateGroup(const ID: Integer; const Header: string): TListGroup; overload;
+    /// <summary> Crea un nuevo Grupo en el ListView </summary>
+    /// <param name="ID"> El valor que se asigna a la propiedad GroupID </param>
+    /// <param name="Header"> El valor que se asigna a la propiedad Header </param>
+    /// <param name="State"> El valor que se asigna a la propiedad State </param>
+    function CreateGroup(const ID: Integer; const Header: string; const State: TListGroupStateSet): TListGroup; overload;
     /// <summary> Devuelve la cantidad total de Items </summary>
     property ItemCount: Integer read GetItemCount;
     /// <summary> Devuelve la cantidad de Items en el grupo correspondiente </summary>
@@ -133,6 +143,19 @@ begin
     if ListItem.GroupID = Group.GroupID then
       Inc(Result);
   end;
+end;
+
+function TListViewHelper.CreateGroup(const ID: Integer; const Header: string): TListGroup;
+begin
+  Result := CreateGroup(ID, Header, [lgsNormal, lgsCollapsible]);
+end;
+
+function TListViewHelper.CreateGroup(const ID: Integer; const Header: string; const State: TListGroupStateSet): TListGroup;
+begin
+  Result := Self.Groups.Add;
+  Result.Header := Header;
+  Result.GroupID := ID;
+  Result.State := State;
 end;
 
 procedure TListViewHelper.StretchColumIndex(const StectchColumn: Integer);
