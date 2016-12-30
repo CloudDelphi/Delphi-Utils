@@ -77,8 +77,19 @@ begin
 end;
 
 function TFDDataSetMerger.CopyStructure(Source: TDataSet; Owner: TComponent): TDataSet;
+var
+  I: Integer;
+  FieldDef: TFieldDef;
 begin
   Result := TFDMemTable.Create(Owner);
+  Source.Open;
+  for I := 0 to Source.FieldDefs.Count - 1 do
+  begin
+    FieldDef := Result.FieldDefs.AddFieldDef;
+    FieldDef.Assign(Source.FieldDefs[I]);
+    FieldDef.Attributes := FieldDef.Attributes - [TFieldAttribute.faReadonly];
+  end;
+  Result.Open;
 end;
 
 procedure TFDDataSetMerger.MergeInto(Source, Destination: TDataSet);
