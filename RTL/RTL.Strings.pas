@@ -10,6 +10,8 @@ type
     class function IsInteger(const Value: string): Boolean; static;
     /// <summary> Returns True if the given string is an Int64 </summary>
     class function IsInt64(const Value: string): Boolean; static;
+    /// <summary> Returns True if the given string is a Float </summary>
+    class function IsFloat(const Value: string): Boolean; static;
   end;
 {$ENDREGION}
 
@@ -19,6 +21,13 @@ uses
   System.SysUtils;
 
 {$REGION 'TString'}
+
+class function TString.IsFloat(const Value: string): Boolean;
+var
+  Dummy: Double;
+begin
+  Result := TryStrToFloat(Value, Dummy);
+end;
 
 class function TString.IsInt64(const Value: string): Boolean;
 var
