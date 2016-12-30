@@ -44,6 +44,10 @@ type
     /// <param name="Header"> El valor que se asigna a la propiedad Header </param>
     /// <param name="State"> El valor que se asigna a la propiedad State </param>
     function CreateGroup(const ID: Integer; const Header: string; const State: TListGroupStateSet): TListGroup; overload;
+    /// <summary> Devuelve el TListGroup dado su propiedad GroupID </summary>
+    /// <remarks> Si no existe un TListGroup con el GroupID indicado devuelve nil </remarks>
+    function GroupByID(const ID: Integer): TListGroup;
+
     /// <summary> Devuelve la cantidad total de Items </summary>
     property ItemCount: Integer read GetItemCount;
     /// <summary> Devuelve la cantidad de Items en el grupo correspondiente </summary>
@@ -74,6 +78,17 @@ type
     ///  Si el ListView no tiene GroupView := True, se devuelve TListItem.Index
     /// </summary>
     property RelativeIndex: Integer read GetRelativeIndex;
+  end;
+{$ENDREGION}
+
+{$REGION 'TListGroupHelper'}
+  TListGroupHelper = class helper for TListGroup
+  private
+    function Groups: TListGroups;
+    function ListView: TCustomListView;
+  public
+    /// <summary> Elimina todos los TListItem que pertenecen al TListGroup </summary>
+    procedure Clear;
   end;
 {$ENDREGION}
 
@@ -143,6 +158,21 @@ begin
     if ListItem.GroupID = Group.GroupID then
       Inc(Result);
   end;
+end;
+
+function TListViewHelper.GroupByID(const ID: Integer): TListGroup;
+var
+  I: Integer;
+  Each: TListGroup;
+begin
+  for I := 0 to Groups.Count - 1 do
+  begin
+    Each := Groups[I];
+    if Each.GroupID = ID then
+      Exit(Each);
+  end;
+
+  Result := nil;
 end;
 
 function TListViewHelper.CreateGroup(const ID: Integer; const Header: string): TListGroup;
@@ -238,6 +268,39 @@ begin
 
   raise Exception.CreateFmt('Item with Index %d not found on GroupID %d', [Index, GroupID]);
 end;
+
+{$ENDREGION}
+
+{$REGION 'TListGroupHelper'}
+
+procedure TListGroupHelper.Clear;
+var
+  I: Integer;
+  ListItem: TListItem;
+begin
+  ListView.Items.BeginUpdate;
+  try
+    for I := ListView.Items.Count - 1 downto 0 do
+    begin
+      ListItem := ListView.Items[I];
+      if ListItem.GroupID = GroupID then
+        ListItem.Delete;
+    end;
+  finally
+    ListView.Items.EndUpdate;
+  end;
+end;
+
+function TListGroupHelper.Groups: TListGroups;
+begin
+  Result := Collection as TListGroups;
+end;
+
+function TListGroupHelper.ListView: TCustomListView;
+begin
+  Result := Groups.Owner as TCustomListView;
+end;
+
 
 {$ENDREGION}
 
