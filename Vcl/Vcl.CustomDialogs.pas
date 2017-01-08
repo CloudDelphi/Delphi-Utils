@@ -55,7 +55,16 @@ function WarningPrompt(const Prompt: string): Boolean; overload;
 function WarningPrompt(const Prompt: string; const FormatArgs: array of const): Boolean; overload;
 {$ENDREGION}
 
-procedure PromptOpenFile(const Prompt, Filename: string);
+{$REGION 'Open File/Folder Prompts'}
+/// <summary> Displays a Confirmation Message with a prompt. If the Prompt returns True, the File is opened </summary>
+procedure PromptOpenFile(const Prompt, FileName: string);
+/// <summary> Displays a Confirmation Message with a prompt. If the Prompt returns True, the shell is opened
+/// at the directory pointed by Path </summary>
+procedure PromptOpenFolder(const Prompt, Path: string);
+/// <summary> Displays a Confirmation Message with a prompt. If the Prompt returns True, the shell is opened
+/// at the directory pointed of the File and the File is also selected </summary>
+procedure PromptShowFileDirectory(const Prompt, FileName: string);
+{$ENDREGION}
 
 implementation
 
@@ -170,10 +179,22 @@ begin
   Result := WarningPrompt(Format(Prompt, FormatArgs));
 end;
 
-procedure PromptOpenFile(const Prompt, Filename: string);
+procedure PromptOpenFile(const Prompt, FileName: string);
 begin
   if PromptMsg(Prompt + sLineBreak + sLineBreak + 'Abrir archivo?') then
-    ShellExecute(0, 'OPEN', PWideChar(Filename), nil, nil, SW_SHOWMAXIMIZED);
+    ShellExecute(0, 'OPEN', PWideChar(FileName), nil, nil, SW_SHOWMAXIMIZED);
+end;
+
+procedure PromptOpenFolder(const Prompt, Path: string);
+begin
+  if PromptMsg(Prompt + sLineBreak + sLineBreak + 'Abrir directorio?') then
+    ShellExecute(0, 'OPEN', PWideChar(Path), nil, nil, SW_SHOWMAXIMIZED);
+end;
+
+procedure PromptShowFileDirectory(const Prompt, FileName: string);
+begin
+  if PromptMsg(Prompt + sLineBreak + sLineBreak + 'Abrir directorio?') then
+    ShellExecute(0, 'OPEN', 'explorer.exe', PWideChar('/select,"' + FileName + '"'), nil, SW_SHOWMAXIMIZED);
 end;
 
 end.
