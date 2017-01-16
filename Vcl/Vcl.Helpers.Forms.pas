@@ -19,7 +19,7 @@ type
 implementation
 
 uses
-  FMX.Helpers.Forms;
+  FMX.Helpers.Forms.Windows;
 
 {$REGION 'TVclFormHelper'}
 
