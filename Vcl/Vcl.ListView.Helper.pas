@@ -55,6 +55,17 @@ type
   end;
 {$ENDREGION}
 
+{$REGION 'TListItemsHelper'}
+  TListItemsHelper = class helper for Vcl.ComCtrls.TListItems
+  strict private
+    function GetFirst: TListItem;
+    function GetLast: TListItem;
+  public
+    property First: TListItem read GetFirst;
+    property Last: TListItem read GetLast;
+  end;
+{$ENDREGION}
+
 {$REGION 'TListColumnHelper'}
   TListColumnHelper = class helper for TListColumn
   strict private
@@ -301,6 +312,20 @@ begin
   Result := Groups.Owner as TCustomListView;
 end;
 
+
+{$ENDREGION}
+
+{$REGION 'TListItemsHelper'}
+
+function TListItemsHelper.GetFirst: TListItem;
+begin
+  Result := Item[0];
+end;
+
+function TListItemsHelper.GetLast: TListItem;
+begin
+  Result := Item[Count - 1];
+end;
 
 {$ENDREGION}
 
