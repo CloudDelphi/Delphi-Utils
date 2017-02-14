@@ -34,6 +34,8 @@ type
     procedure InitializeColumnsVisibility;
     /// <summary> Ajusta el tamaño de las columnas del ListView de modo tal que StrechColum ocupe lo mas posible </summary>
     procedure StretchColumIndex(const StectchColumn: Integer);
+    /// <summary> Ajusta el tamaño de las columnas del ListView de modo tal que StrechColum ocupe lo mas posible </summary>
+    procedure StretchColum(AColumn: TListColumn);
     /// <summary> Crea un nuevo Grupo en el ListView </summary>
     /// <param name="ID"> El valor que se asigna a la propiedad GroupID </param>
     /// <param name="Header"> El valor que se asigna a la propiedad Header </param>
@@ -73,6 +75,19 @@ type
     procedure SetVisible(const Value: Boolean);
   public
     property Visible: Boolean read GetVisible write SetVisible;
+  end;
+{$ENDREGION}
+
+{$REGION 'TListColumnsHelper'}
+  TListColumnsHelper = class helper for TListColumns
+  strict private
+    function GetFirst: TListColumn;
+    function GetLast: TListColumn;
+  public
+    /// <summary> Devuelve la primer columna del ListView </summary>
+    property First: TListColumn read GetFirst;
+    /// <summary> Devuelve la ultima columna del ListView </summary>
+    property Last: TListColumn read GetLast;
   end;
 {$ENDREGION}
 
@@ -197,6 +212,11 @@ begin
   Result.Header := Header;
   Result.GroupID := ID;
   Result.State := State;
+end;
+
+procedure TListViewHelper.StretchColum(AColumn: TListColumn);
+begin
+  StretchColumIndex(AColumn.Index);
 end;
 
 procedure TListViewHelper.StretchColumIndex(const StectchColumn: Integer);
@@ -325,6 +345,20 @@ end;
 function TListItemsHelper.GetLast: TListItem;
 begin
   Result := Item[Count - 1];
+end;
+
+{$ENDREGION}
+
+{$REGION 'TListColumnsHelper'}
+
+function TListColumnsHelper.GetFirst: TListColumn;
+begin
+  Result := Items[0];
+end;
+
+function TListColumnsHelper.GetLast: TListColumn;
+begin
+  Result := Items[Count - 1];
 end;
 
 {$ENDREGION}
