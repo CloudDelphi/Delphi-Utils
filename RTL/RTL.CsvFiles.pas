@@ -15,7 +15,7 @@ type
     function GetText: string;
 
     /// <summary> Splits the line using ASeparator and returns the result in an enumerable </summary>
-    function SplitText(const ASeparator: Char): IEnumerable<string>; overload;
+    function SplitText(const ASeparator: string): IEnumerable<string>; overload;
     /// <summary> Splits the line using the Separator of the ICsvFile and returns the result in an enumerable </summary>
     function SplitText: IEnumerable<string>; overload;
     /// <summary> The raw value of the line </summary>
@@ -31,15 +31,15 @@ type
     function GetFileName: string;
     function GetLine(Index: Integer): ICsvLine;
     function GetLines: IEnumerable<ICsvLine>;
-    function GetSeparator: Char;
+    function GetSeparator: string;
     function GetText: string;
     function GetEncoding: TEncoding;
-    procedure SetSeparator(const Value: Char);
+    procedure SetSeparator(const Value: string);
 
     /// <summary> The name of the csv File </summary>
     property FileName: string read GetFileName;
     /// <summary> The current separator char used to split the file </summary>
-    property Separator: Char read GetSeparator write SetSeparator;
+    property Separator: string read GetSeparator write SetSeparator;
     /// <summary> Each line of the csv File, represented through an ICsvLine interface </summary>
     property Line[Index: Integer]: ICsvLine read GetLine;
     /// <summary> Returns the whole content of the csv File </summary>
@@ -58,9 +58,9 @@ type
   ICsvFileHandler = interface
     ['{8CDBE29D-DE51-467C-A0DD-E752ECF4BD44}']
     /// <summary> Creates a new file in disk, then open and return it </summary>
-    function New(const AFileName: string; const ASeparator: Char; AEncoding: TEncoding): ICsvFile;
+    function New(const AFileName: string; const ASeparator: string; AEncoding: TEncoding): ICsvFile;
     /// <summary> Opens the file with the given separator and returns a ICsvFile interface with the file </summary>
-    function Load(const AFileName: string; const ASeparator: Char; AEncoding: TEncoding): ICsvFile;
+    function Load(const AFileName: string; const ASeparator: string; AEncoding: TEncoding): ICsvFile;
     /// <summary> Saves the given ICsvFile in the Physical File given by its FileName property </summary>
     procedure Save(const ACsvFile: ICsvFile; AEncoding: TEncoding); overload;
     /// <summary> Saves the given ICsvFile in the Physical File given by AFileName </summary>
@@ -71,15 +71,15 @@ type
 {$REGION 'TCsvLine'}
   TCsvLine = class(TInterfacedObject, ICsvLine)
   strict private
-    FOwnerSeparator: Char;
+    FOwnerSeparator: string;
     FText: string;
 
     function GetText: string;
   strict protected
-    function SplitText(const ASeparator: Char): IEnumerable<string>; overload;
+    function SplitText(const ASeparator: string): IEnumerable<string>; overload;
     function SplitText: IEnumerable<string>; overload;
   public
-    constructor Create(const AText: string; const AOwnerSeparator: Char);
+    constructor Create(const AText: string; const AOwnerSeparator: string);
   end;
 {$ENDREGION}
 
@@ -89,20 +89,20 @@ type
     FFileContents: TStrings;
     FEncoding: TEncoding;
     FFileName: string;
-    FSeparator: Char;
+    FSeparator: string;
 
     function GetCount: Integer;
     function GetFileName: string;
     function GetLine(Index: Integer): ICsvLine;
     function GetLines: IEnumerable<ICsvLine>;
-    function GetSeparator: Char;
+    function GetSeparator: string;
     function GetText: string;
     function GetEncoding: TEncoding;
-    procedure SetSeparator(const Value: Char);
+    procedure SetSeparator(const Value: string);
   strict protected
     property FileContents: TStrings read FFileContents;
   public
-    constructor Create(const AFileName: string; const ASeparator: Char; AEncoding: TEncoding = nil);
+    constructor Create(const AFileName: string; const ASeparator: string; AEncoding: TEncoding = nil);
     destructor Destroy; override;
   end;
 {$ENDREGION}
@@ -110,8 +110,8 @@ type
 {$REGION 'TCsvFileHandler'}
   TCsvFileHandler = class(TInterfacedObject, ICsvFileHandler)
   strict protected
-    function New(const AFileName: string; const ASeparator: Char; AEncoding: TEncoding): ICsvFile;
-    function Load(const AFileName: string; const ASeparator: Char; AEncoding: TEncoding): ICsvFile;
+    function New(const AFileName: string; const ASeparator: string; AEncoding: TEncoding): ICsvFile;
+    function Load(const AFileName: string; const ASeparator: string; AEncoding: TEncoding): ICsvFile;
     procedure Save(const ACsvFile: ICsvFile; AEncoding: TEncoding); overload;
     procedure Save(const ACsvFile: ICsvFile; const AFileName: string; AEncoding: TEncoding); overload;
   end;
@@ -124,8 +124,8 @@ type
     /// <summary> Creates and returns a ICsvFileHandler </summary>
     class function Handler: ICsvFileHandler; static;
   public
-    class function New(const AFileName: string; const ASeparator: Char; AEncoding: TEncoding): ICsvFile; static;
-    class function Load(const AFileName: string; const ASeparator: Char; AEncoding: TEncoding): ICsvFile; static;
+    class function New(const AFileName: string; const ASeparator: string; AEncoding: TEncoding): ICsvFile; static;
+    class function Load(const AFileName: string; const ASeparator: string; AEncoding: TEncoding): ICsvFile; static;
     class procedure Save(const ACsvFile: ICsvFile; AEncoding: TEncoding); overload; static;
     class procedure Save(const ACsvFile: ICsvFile; const AFileName: string; AEncoding: TEncoding); overload; static;
   end;
@@ -166,12 +166,12 @@ begin
   Result := TCsvFileHandler.Create;
 end;
 
-class function CSV.Load(const AFileName: string; const ASeparator: Char; AEncoding: TEncoding): ICsvFile;
+class function CSV.Load(const AFileName: string; const ASeparator: string; AEncoding: TEncoding): ICsvFile;
 begin
   Result := Handler.Load(AFileName, ASeparator, AEncoding)
 end;
 
-class function CSV.New(const AFileName: string; const ASeparator: Char; AEncoding: TEncoding): ICsvFile;
+class function CSV.New(const AFileName: string; const ASeparator: string; AEncoding: TEncoding): ICsvFile;
 begin
   Result := Handler.New(AFileName, ASeparator, AEncoding);
 end;
@@ -190,7 +190,7 @@ end;
 
 {$REGION 'TCsvFileHandler'}
 
-function TCsvFileHandler.New(const AFileName: string; const ASeparator: Char; AEncoding: TEncoding): ICsvFile;
+function TCsvFileHandler.New(const AFileName: string; const ASeparator: string; AEncoding: TEncoding): ICsvFile;
 var
   LChar: Char;
 begin
@@ -207,7 +207,7 @@ begin
   Result := Load(AFileName, ASeparator, AEncoding);
 end;
 
-function TCsvFileHandler.Load(const AFileName: string; const ASeparator: Char; AEncoding: TEncoding): ICsvFile;
+function TCsvFileHandler.Load(const AFileName: string; const ASeparator: string; AEncoding: TEncoding): ICsvFile;
 begin
   Result := TCsvFile.Create(AFileName, ASeparator, AEncoding.ThisOrDefault);
 end;
@@ -229,7 +229,7 @@ end;
 
 {$REGION 'TCsvFile'}
 
-constructor TCsvFile.Create(const AFileName: string; const ASeparator: Char; AEncoding: TEncoding);
+constructor TCsvFile.Create(const AFileName: string; const ASeparator: string; AEncoding: TEncoding);
 begin
   inherited Create;
   FFileName := AFileName;
@@ -280,7 +280,7 @@ begin
   end;
 end;
 
-function TCsvFile.GetSeparator: Char;
+function TCsvFile.GetSeparator: string;
 begin
   Result := FSeparator;
 end;
@@ -290,7 +290,7 @@ begin
   Result := FFileContents.Text;
 end;
 
-procedure TCsvFile.SetSeparator(const Value: Char);
+procedure TCsvFile.SetSeparator(const Value: string);
 begin
   FSeparator := Value;
 end;
@@ -299,7 +299,7 @@ end;
 
 {$REGION 'TCsvLine'}
 
-constructor TCsvLine.Create(const AText: string; const AOwnerSeparator: Char);
+constructor TCsvLine.Create(const AText: string; const AOwnerSeparator: string);
 begin
   inherited Create;
   FText := AText;
@@ -316,7 +316,7 @@ begin
   Result := SplitText(FOwnerSeparator);
 end;
 
-function TCsvLine.SplitText(const ASeparator: Char): IEnumerable<string>;
+function TCsvLine.SplitText(const ASeparator: string): IEnumerable<string>;
 begin
   Result := TCollections.CreateList<string>(FText.Split(ASeparator));
 end;
