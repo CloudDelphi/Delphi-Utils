@@ -93,16 +93,15 @@ type
 
 {$REGION 'TListItemHelper'}
   TListItemHelper = class helper for TListItem
-  private
+  strict private
     function Groups: TListGroups;
     function ListView: TListView;
     function GetRelativeIndex: Integer;
+    function PriorGroupCount: Integer;
   public
-    /// <summary>
-    ///   El indice del ListItem relativo a su grupo
-    ///  Si el ListItem no tiene Grupo, se devuelve TListItem.Index
-    ///  Si el ListView no tiene GroupView := True, se devuelve TListItem.Index
-    /// </summary>
+    /// <summary> El indice del ListItem relativo a su grupo </summary>
+    /// <summary> Si el ListItem no tiene Grupo, se devuelve TListItem.Index </summary>
+    /// <summary> Si el ListView no tiene GroupView := True, se devuelve TListItem.Index </summary>
     property RelativeIndex: Integer read GetRelativeIndex;
   end;
 {$ENDREGION}
@@ -121,7 +120,8 @@ type
 implementation
 
 uses
-  System.SysUtils;
+  System.SysUtils,
+  System.Math;
 
 {$REGION 'TListViewHelper'}
 
@@ -279,9 +279,12 @@ begin
   Result := TListView(inherited ListView);
 end;
 
+function TListItemHelper.PriorGroupCount: Integer;
+begin
+  Result := ListView.ItemsInGroup[Groups[GroupID - 1]]
+end;
+
 function TListItemHelper.GetRelativeIndex: Integer;
-var
-  I, PriorGroupCount, ThisGroupCount: Integer;
 begin
   if GroupID = -1 then
     Exit(Index);
@@ -289,15 +292,7 @@ begin
   if not ListView.GroupView then
     Exit(Index);
 
-  PriorGroupCount := ListView.ItemsInGroup[Groups[GroupID - 1]];
-  ThisGroupCount := ListView.ItemsInGroup[Groups[GroupID]];
-  for I := PriorGroupCount to ThisGroupCount do
-  begin
-    if ListView.Items[I] = Self then
-      Exit(I);
-  end;
-
-  raise Exception.CreateFmt('Item with Index %d not found on GroupID %d', [Index, GroupID]);
+  Result := Index - PriorGroupCount;
 end;
 
 {$ENDREGION}
