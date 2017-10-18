@@ -11,8 +11,11 @@ type
 {$REGION 'TFDMemTableDataSetCloner'}
   TFDMemTableDataSetCloner = class(TInterfacedObject, IDataSetCloner)
   strict private
-    function Copy(Source: TDataSet; Owner: TComponent): TDataSet;
-    function CopyRecords(const Records: TArray<TBookmark>; Source: TDataSet; Owner: TComponent): TDataSet;
+    function Copy(const Source: TDataSet; const Owner: TComponent): TDataSet;
+    function CopyRecords(
+      const Records: TArray<TBookmark>;
+      const Source: TDataSet;
+      const Owner: TComponent): TDataSet;
   end;
 {$ENDREGION}
 
@@ -24,7 +27,7 @@ uses
 
 {$REGION 'TFDMemTableDataSetCloner'}
 
-function TFDMemTableDataSetCloner.Copy(Source: TDataSet; Owner: TComponent): TDataSet;
+function TFDMemTableDataSetCloner.Copy(const Source: TDataSet; const Owner: TComponent): TDataSet;
 var
   Copy: TFDMemTable;
 begin
@@ -36,7 +39,10 @@ begin
   end;
 end;
 
-function TFDMemTableDataSetCloner.CopyRecords(const Records: TArray<TBookmark>; Source: TDataSet; Owner: TComponent): TDataSet;
+function TFDMemTableDataSetCloner.CopyRecords(
+  const Records: TArray<TBookmark>;
+  const Source: TDataSet;
+  const Owner: TComponent): TDataSet;
 var
   Copy: TFDMemTable;
   I: Integer;

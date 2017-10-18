@@ -14,14 +14,15 @@ type
     /// <summary> Devuelve una copia del DataSet </summary>
     /// <param name="Source"> DataSet a clonar </param>
     /// <param name="Owner"> Componente que se usa como Owner del TDataSet resultante </param>
-    function Copy(Source: TDataSet; Owner: TComponent): TDataSet;
-    /// <summary>
-    ///   Devuelve una copia del DataSet, que incluye unicamente los registros indicados
-    /// </summary>
+    function Copy(const Source: TDataSet; const Owner: TComponent): TDataSet;
+    /// <summary> Devuelve una copia del DataSet, que incluye unicamente los registros indicados </summary>
     /// <param name="Records"> Array con los registros que se deben copiar </param>
     /// <param name="Source"> DataSet a clonar </param>
     /// <param name="Owner"> Componente que se usa como Owner del TDataSet resultante </param>
-    function CopyRecords(const Records: TArray<TBookmark>; Source: TDataSet; Owner: TComponent): TDataSet;
+    function CopyRecords(
+      const Records: TArray<TBookmark>;
+      const Source: TDataSet;
+      const Owner: TComponent): TDataSet;
   end;
 {$ENDREGION}
 
